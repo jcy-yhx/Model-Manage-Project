@@ -2,13 +2,23 @@
 node_modules/
 
 # Build output
-server/server
+server/cmd/server/server
 server/tmp/
 web/dist/
+
+# Go build artifacts
+*.exe
+*.test
+*.out
+coverage.html
+
+# TypeScript
+*.tsbuildinfo
 
 # IDE
 .idea/
 .vscode/
+!.vscode/extensions.json
 *.swp
 *.swo
 *~
@@ -19,7 +29,7 @@ Thumbs.db
 
 # Environment
 .env
-.env.local
+.env.*
 *.log
 
 # Go
