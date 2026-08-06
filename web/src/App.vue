@@ -22,7 +22,7 @@
 
       <!-- 实时日志 -->
       <section class="section section-logs">
-        <RealtimeLog />
+        <RealtimeLogs />
       </section>
 
       <!-- API Playground -->
@@ -39,7 +39,7 @@ import { useDashboard } from './stores/dashboard'
 import AppHeader from './components/layout/AppHeader.vue'
 import HeroMetrics from './components/dashboard/HeroMetrics.vue'
 import ModelHealthPanel from './components/dashboard/ModelHealthPanel.vue'
-import RealtimeLog from './components/dashboard/RealtimeLog.vue'
+import RealtimeLogs from './components/dashboard/RealtimeLogs.vue'
 import TrendChart from './components/charts/TrendChart.vue'
 import Playground from './components/dashboard/Playground.vue'
 import UsagePie from './components/charts/UsagePie.vue'
