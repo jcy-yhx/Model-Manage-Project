@@ -2,9 +2,9 @@
   <div class="app-shell">
     <AppHeader />
     <main class="main-content">
-      <!-- Hero 指标区域 (placeholder: 当前 MetricCards, 阶段 6-2 替换为 HeroMetrics) -->
+      <!-- Hero 指标区域 -->
       <section class="section section-hero">
-        <MetricCards />
+        <HeroMetrics />
       </section>
 
       <!-- 模型健康 + 用量分布 -->
@@ -35,7 +35,7 @@
 import { onMounted, onUnmounted } from 'vue'
 import { useDashboard } from './stores/dashboard'
 import AppHeader from './components/layout/AppHeader.vue'
-import MetricCards from './components/dashboard/MetricCards.vue'
+import HeroMetrics from './components/dashboard/HeroMetrics.vue'
 import ModelCards from './components/dashboard/ModelCards.vue'
 import RealtimeLog from './components/dashboard/RealtimeLog.vue'
 import TrendChart from './components/dashboard/TrendChart.vue'
