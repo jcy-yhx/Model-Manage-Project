@@ -1,71 +1,24 @@
 package handler
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
+
+	"ai-gateway-server/internal/pkg"
 )
 
-// Response 统一 API 响应格式
-type Response struct {
-	Code    int         `json:"code"`
-	Message string      `json:"message"`
-	Data    interface{} `json:"data"`
-}
+// 以下函数是对 pkg 包的薄封装，保持 handler 层调用简洁
 
-// Success 成功响应 (200)
-func Success(c *gin.Context, data interface{}) {
-	c.JSON(http.StatusOK, Response{
-		Code:    0,
-		Message: "ok",
-		Data:    data,
-	})
-}
+// Success 成功响应
+func Success(c *gin.Context, data interface{}) { pkg.Success(c, data) }
 
-// Error 业务错误响应
-func Error(c *gin.Context, httpStatus int, code int, message string) {
-	c.AbortWithStatusJSON(httpStatus, Response{
-		Code:    code,
-		Message: message,
-		Data:    nil,
-	})
-}
+// BadRequest 参数校验失败
+func BadRequest(c *gin.Context, msg string) { pkg.BadRequest(c, msg) }
 
-// BadRequest 参数校验失败 (422)
-func BadRequest(c *gin.Context, message string) {
-	Error(c, http.StatusUnprocessableEntity, 422, message)
-}
+// NotFound 资源不存在
+func NotFound(c *gin.Context, msg string) { pkg.NotFound(c, msg) }
 
-// Unauthorized 认证失败 (401)
-func Unauthorized(c *gin.Context, message string) {
-	Error(c, http.StatusUnauthorized, 401, message)
-}
+// NoRouteHandler 404
+func NoRouteHandler(c *gin.Context) { pkg.NotFound(c, "请求的资源不存在") }
 
-// NotFound 资源不存在 (404)
-func NotFound(c *gin.Context, message string) {
-	Error(c, http.StatusNotFound, 404, message)
-}
-
-// TooManyRequests 频率/额度超限 (429)
-func TooManyRequests(c *gin.Context, message string, data interface{}) {
-	c.AbortWithStatusJSON(http.StatusTooManyRequests, Response{
-		Code:    429,
-		Message: message,
-		Data:    data,
-	})
-}
-
-// InternalError 服务内部错误 (500)
-func InternalError(c *gin.Context, message string) {
-	Error(c, http.StatusInternalServerError, 500, message)
-}
-
-// NoRouteHandler 处理 404 路由
-func NoRouteHandler(c *gin.Context) {
-	NotFound(c, "请求的资源不存在")
-}
-
-// NoMethodHandler 处理 405 方法不允许
-func NoMethodHandler(c *gin.Context) {
-	Error(c, http.StatusMethodNotAllowed, 405, "请求方法不允许")
-}
+// NoMethodHandler 405
+func NoMethodHandler(c *gin.Context) { pkg.Error(c, 405, 405, "请求方法不允许") }

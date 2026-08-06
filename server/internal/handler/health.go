@@ -6,6 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
+
+	"ai-gateway-server/internal/pkg"
 )
 
 // HealthHandler 健康检查处理器
@@ -44,7 +46,7 @@ func (h *HealthHandler) Health(c *gin.Context) {
 		})
 	}
 
-	c.JSON(http.StatusOK, Response{
+	c.JSON(http.StatusOK, pkg.Response{
 		Code:    0,
 		Message: "ok",
 		Data: map[string]interface{}{

@@ -7,12 +7,11 @@ import (
 
 	"ai-gateway-server/internal/handler"
 	"ai-gateway-server/internal/middleware"
+	"ai-gateway-server/internal/service"
 )
 
 // SetupRouter 注册所有路由和中间件
-// db 和 rdb 注入到 handler 中
-func SetupRouter(db *gorm.DB, rdb *redis.Client) *gin.Engine {
-	// 根据配置设置 gin mode
+func SetupRouter(db *gorm.DB, rdb *redis.Client, chatSvc *service.ChatService, defaultQuota int) *gin.Engine {
 	gin.SetMode(gin.DebugMode)
 
 	r := gin.New()
@@ -26,16 +25,17 @@ func SetupRouter(db *gorm.DB, rdb *redis.Client) *gin.Engine {
 	r.NoRoute(handler.NoRouteHandler)
 	r.NoMethod(handler.NoMethodHandler)
 
-	// 健康检查 handler
+	// 公开路由
 	healthHandler := &handler.HealthHandler{DB: db, RDB: rdb}
-
-	// 公开路由（无需认证）
 	r.GET("/api/health", healthHandler.Health)
 
-	// TODO 阶段 4：API Key 认证路由组
-	// authorized := r.Group("/api")
-	// authorized.Use(middleware.ApiKeyAuth(db))
-	// { ... }
+	// API Key 认证路由组
+	authorized := r.Group("/api")
+	authorized.Use(middleware.ApiKeyAuth(db, rdb, defaultQuota))
+	{
+		chatHandler := &handler.ChatHandler{Svc: chatSvc}
+		authorized.POST("/chat", chatHandler.Chat)
+	}
 
 	return r
 }

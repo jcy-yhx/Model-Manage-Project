@@ -17,6 +17,8 @@ import (
 
 	"ai-gateway-server/internal/config"
 	"ai-gateway-server/internal/router"
+	"ai-gateway-server/internal/service"
+	"ai-gateway-server/internal/simulator"
 )
 
 func main() {
@@ -52,10 +54,20 @@ func main() {
 	}
 	log.Println("[Init] Redis connected")
 
-	// ── 4. 路由 ──
-	r := router.SetupRouter(db, rdb)
+	// ── 4. 初始化服务 ──
+	chatSvc := service.NewChatService(db, rdb, cfg.Quota.DefaultDailyTokens)
 
-	// ── 5. 启动 HTTP Server ──
+	// ── 5. 启动模拟器（后台 goroutine） ──
+	sim := simulator.New(chatSvc)
+	if cfg.Simulator.Enabled {
+		sim.Start()
+		log.Println("[Init] Simulator started")
+	}
+
+	// ── 6. 路由 ──
+	r := router.SetupRouter(db, rdb, chatSvc, cfg.Quota.DefaultDailyTokens)
+
+	// ── 7. 启动 HTTP Server ──
 	addr := fmt.Sprintf(":%d", cfg.Server.Port)
 	srv := &http.Server{
 		Addr:    addr,
@@ -69,11 +81,13 @@ func main() {
 		}
 	}()
 
-	// ── 6. 优雅关闭 ──
+	// ── 8. 优雅关闭 ──
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
+
 	log.Println("[Server] shutting down...")
+	sim.Stop()
 
 	shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer shutdownCancel()
