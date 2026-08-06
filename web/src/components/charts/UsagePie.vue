@@ -3,7 +3,7 @@
     <div class="up-header">
       <h3 class="up-title">模型用量分布</h3>
     </div>
-    <v-chart :option="option" autoresize style="height: 220px" />
+    <v-chart :option="option" :echarts="echarts" autoresize style="height: 220px" />
     <div class="up-legend">
       <div
         v-for="(m, i) in store.modelUsage?.models ?? []"
@@ -21,6 +21,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import VChart from 'vue-echarts'
+import * as echarts from 'echarts'
 import { useDashboard } from '../../stores/dashboard'
 
 const CHART_COLORS = ['#3B82F6', '#6366F1', '#8B5CF6', '#06B6D4', '#10B981']
