@@ -23,9 +23,9 @@
         <RealtimeLog />
       </section>
 
-      <!-- API Playground (placeholder: 当前 TestPanel, 阶段 6-3 替换为 Playground) -->
+      <!-- API Playground -->
       <section class="section section-playground">
-        <TestPanel />
+        <Playground />
       </section>
     </main>
   </div>
@@ -39,7 +39,7 @@ import HeroMetrics from './components/dashboard/HeroMetrics.vue'
 import ModelCards from './components/dashboard/ModelCards.vue'
 import RealtimeLog from './components/dashboard/RealtimeLog.vue'
 import TrendChart from './components/dashboard/TrendChart.vue'
-import TestPanel from './components/dashboard/TestPanel.vue'
+import Playground from './components/dashboard/Playground.vue'
 import PieChart from './components/charts/PieChart.vue'
 
 const store = useDashboard()
