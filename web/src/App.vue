@@ -12,14 +12,12 @@
         <ModelHealthPanel />
       </section>
 
-      <!-- 用量分布 -->
-      <section class="section section-pie">
-        <PieChart />
-      </section>
-
-      <!-- 趋势分析 -->
+      <!-- 趋势分析 + 用量分布 -->
       <section class="section section-analytics">
-        <TrendChart />
+        <div class="analytics-grid">
+          <TrendChart class="analytics-main" />
+          <UsagePie class="analytics-side" />
+        </div>
       </section>
 
       <!-- 实时日志 -->
@@ -42,9 +40,9 @@ import AppHeader from './components/layout/AppHeader.vue'
 import HeroMetrics from './components/dashboard/HeroMetrics.vue'
 import ModelHealthPanel from './components/dashboard/ModelHealthPanel.vue'
 import RealtimeLog from './components/dashboard/RealtimeLog.vue'
-import TrendChart from './components/dashboard/TrendChart.vue'
+import TrendChart from './components/charts/TrendChart.vue'
 import Playground from './components/dashboard/Playground.vue'
-import PieChart from './components/charts/PieChart.vue'
+import UsagePie from './components/charts/UsagePie.vue'
 
 const store = useDashboard()
 
@@ -84,4 +82,13 @@ body {
 }
 
 .section { }
+
+.analytics-grid {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: var(--space-5);
+  align-items: stretch;
+}
+.analytics-main { }
+.analytics-side { }
 </style>
