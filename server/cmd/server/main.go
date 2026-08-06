@@ -56,6 +56,8 @@ func main() {
 
 	// ── 4. 初始化服务 ──
 	chatSvc := service.NewChatService(db, rdb, cfg.Quota.DefaultDailyTokens)
+	statsSvc := service.NewStatsService(db, rdb)
+	modelSvc := service.NewModelService(db, rdb)
 
 	// ── 5. 启动模拟器（后台 goroutine） ──
 	sim := simulator.New(chatSvc)
@@ -65,7 +67,7 @@ func main() {
 	}
 
 	// ── 6. 路由 ──
-	r := router.SetupRouter(db, rdb, chatSvc, cfg.Quota.DefaultDailyTokens)
+	r := router.SetupRouter(db, rdb, chatSvc, statsSvc, modelSvc, cfg.Quota.DefaultDailyTokens)
 
 	// ── 7. 启动 HTTP Server ──
 	addr := fmt.Sprintf(":%d", cfg.Server.Port)

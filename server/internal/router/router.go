@@ -11,23 +11,32 @@ import (
 )
 
 // SetupRouter 注册所有路由和中间件
-func SetupRouter(db *gorm.DB, rdb *redis.Client, chatSvc *service.ChatService, defaultQuota int) *gin.Engine {
+func SetupRouter(db *gorm.DB, rdb *redis.Client, chatSvc *service.ChatService, statsSvc *service.StatsService, modelSvc *service.ModelService, defaultQuota int) *gin.Engine {
 	gin.SetMode(gin.DebugMode)
 
 	r := gin.New()
 
-	// 全局中间件
 	r.Use(middleware.CORS())
 	r.Use(middleware.Logger())
 	r.Use(gin.Recovery())
 
-	// 自定义 404 / 405
 	r.NoRoute(handler.NoRouteHandler)
 	r.NoMethod(handler.NoMethodHandler)
 
-	// 公开路由
+	// 公开路由（无需认证）
 	healthHandler := &handler.HealthHandler{DB: db, RDB: rdb}
 	r.GET("/api/health", healthHandler.Health)
+
+	// 统计路由（无需认证，方便 Dashboard 轮询）
+	statsHandler := &handler.StatsHandler{StatsSvc: statsSvc}
+	logHandler := &handler.LogHandler{StatsSvc: statsSvc}
+	modelHandler := &handler.ModelHandler{ModelSvc: modelSvc}
+
+	r.GET("/api/stats/overview", statsHandler.Overview)
+	r.GET("/api/stats/model-usage", statsHandler.ModelUsage)
+	r.GET("/api/stats/trend", statsHandler.Trend)
+	r.GET("/api/realtime/logs", logHandler.RealtimeLogs)
+	r.GET("/api/models", modelHandler.List)
 
 	// API Key 认证路由组
 	authorized := r.Group("/api")
