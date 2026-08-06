@@ -7,10 +7,14 @@
         <HeroMetrics />
       </section>
 
-      <!-- 模型健康 + 用量分布 -->
-      <section class="section section-models">
-        <ModelCards />
-        <PieChart class="pie-side" />
+      <!-- 模型健康 -->
+      <section class="section section-health">
+        <ModelHealthPanel />
+      </section>
+
+      <!-- 用量分布 -->
+      <section class="section section-pie">
+        <PieChart />
       </section>
 
       <!-- 趋势分析 -->
@@ -36,7 +40,7 @@ import { onMounted, onUnmounted } from 'vue'
 import { useDashboard } from './stores/dashboard'
 import AppHeader from './components/layout/AppHeader.vue'
 import HeroMetrics from './components/dashboard/HeroMetrics.vue'
-import ModelCards from './components/dashboard/ModelCards.vue'
+import ModelHealthPanel from './components/dashboard/ModelHealthPanel.vue'
 import RealtimeLog from './components/dashboard/RealtimeLog.vue'
 import TrendChart from './components/dashboard/TrendChart.vue'
 import Playground from './components/dashboard/Playground.vue'
@@ -80,13 +84,4 @@ body {
 }
 
 .section { }
-
-.section-models {
-  display: grid;
-  grid-template-columns: 1fr 260px;
-  gap: var(--space-5);
-  align-items: start;
-}
-
-.pie-side { }
 </style>
